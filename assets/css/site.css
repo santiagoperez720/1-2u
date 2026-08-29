@@ -1,0 +1,384 @@
+/* =========================================================
+   Parker Schmidt — Shared Site Stylesheet
+   Everything that's reused across pages lives here.
+   ========================================================= */
+
+/* ---------- Background point cloud + frosted glass (non-home pages) ---------- */
+#pointcloud-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+#pointcloud-bg canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: blur(8px);
+  opacity: 0.45;
+}
+/* Frosted glass: dark wash + backdrop blur for true frosted look. */
+#pointcloud-glass {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.65);
+  background-image: radial-gradient(ellipse at center, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.8) 100%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+/* Any page content sits above the glass */
+body.page-works > *:not(#pointcloud-bg):not(#pointcloud-glass):not(#nav):not(#bottom-bar),
+body.page-bio   > *:not(#pointcloud-bg):not(#pointcloud-glass):not(#nav):not(#bottom-bar),
+body.page-project > *:not(#pointcloud-bg):not(#pointcloud-glass):not(#nav):not(#bottom-bar) {
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------- Base / reset ---------- */
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  height: 100%;
+  color: #fff;
+  font-family: 'Courier New', monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+body.page-pointcloud { overflow: hidden; }
+canvas { display: block; }
+
+/* ---------- Nav (top) ---------- */
+#nav {
+  position: fixed;
+  top: 15px;
+  left: 0;
+  right: 0;
+  padding: 0 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+  pointer-events: none;
+}
+#nav a { pointer-events: auto; }
+#nav .nav-l { display: flex; gap: 8px; align-items: center; pointer-events: auto; }
+#nav .nav-r { display: flex; gap: 8px; align-items: center; pointer-events: auto; }
+#nav #nav-name,
+#nav #nav-sub,
+#nav #nav-works,
+#nav #nav-index,
+#nav #nav-bio {
+  position: relative;
+  background: transparent;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 4px 8px;
+  display: inline-block;
+  color: #fff;
+  opacity: 1;
+  text-decoration: none;
+  line-height: 1.15;
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: background .15s;
+}
+#nav #nav-name:hover,
+#nav #nav-sub:hover,
+#nav #nav-works:hover,
+#nav #nav-index:hover,
+#nav #nav-bio:hover {
+  background: rgba(180, 180, 180, 0.32);
+}
+
+/* Bracket corners on every nav item — always visible, static. */
+#nav .bracket {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  pointer-events: none;
+}
+#nav .br-tl { top: 0;    left: 0;  border-top: 1px solid rgba(255,255,255,0.85);    border-left: 1px solid rgba(255,255,255,0.85); }
+#nav .br-tr { top: 0;    right: 0; border-top: 1px solid rgba(255,255,255,0.85);    border-right: 1px solid rgba(255,255,255,0.85); }
+#nav .br-bl { bottom: 0; left: 0;  border-bottom: 1px solid rgba(255,255,255,0.85); border-left: 1px solid rgba(255,255,255,0.85); }
+#nav .br-br { bottom: 0; right: 0; border-bottom: 1px solid rgba(255,255,255,0.85); border-right: 1px solid rgba(255,255,255,0.85); }
+
+/* Active page shows the gray box — identical look to the hover state.
+   body.page-* triggers it. !important so it sticks even when not hovered. */
+body.page-home #nav-works,
+body.page-works #nav-index,
+body.page-bio #nav-bio {
+  background: rgba(180, 180, 180, 0.32) !important;
+}
+
+/* ---------- Bottom bar (3 slots) ---------- */
+#bottom-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 5px;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  pointer-events: none;
+  color: rgba(255, 255, 255, 0.3);
+  font-family: 'Courier New', monospace;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+#bottom-bar .bb-l,
+#bottom-bar .bb-c,
+#bottom-bar .bb-r {
+  flex: 1 1 0;
+  min-width: 0;
+}
+#bottom-bar .bb-l { text-align: left; }
+#bottom-bar .bb-c { text-align: center; }
+#bottom-bar .bb-r { text-align: right; }
+/* Mobile-only anchor variants hidden on desktop. Shown by the
+   @media (max-width: 768px) block below. */
+#bottom-bar .bb-c-mobile,
+#bottom-bar .bb-r-mobile { display: none; }
+/* Bottom-bar links inherit the surrounding text appearance —
+   no underline, no color shift on hover. The only visible state is
+   :active (held during click), which briefly tints them so the
+   user gets a tap/click confirmation. */
+#bottom-bar a {
+  color: inherit;
+  text-decoration: none;
+  pointer-events: auto;
+}
+#bottom-bar a:active { color: #fff; }
+
+/* ---------- Top-centered site-loc (Idaho info) ---------- */
+#site-loc {
+  position: fixed;
+  top: 68px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.55);
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  pointer-events: none;
+  text-transform: uppercase;
+}
+#site-loc > div { line-height: 1.5; }
+#site-loc .loc-name { color: rgba(255, 255, 255, 0.75); }
+
+/* ---------- Project table (bottom-left, home page) ---------- */
+#project-table {
+  position: fixed;
+  left: 10px;
+  bottom: 60px;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+#project-table .work-row {
+  display: grid;
+  grid-template-columns: 80px 200px 160px 150px;
+  gap: 14px;
+  padding: 8px 6px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.55);
+  transition: color 0.15s, background 0.15s;
+  text-transform: uppercase;
+  border-bottom: .5px solid rgba(255, 255, 255, 0.08);
+}
+#project-table .work-row:first-child {
+  border-top: .5px solid rgba(255, 255, 255, 0.08);
+}
+#project-table .work-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.85);
+}
+#project-table .work-row.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+#project-table .work-row.active .wc-title { color: #ff2a2a; }
+
+/* Idle-cycle highlight: while the home page is idle and cycling through
+   projects, the row matching the currently-previewed project is marked
+   .idle-active. Unlike .active (the click/scroll-selected state, which
+   keeps a red title), every cell here goes full white so the visitor
+   can read which project the pulse / preview tile is showing. */
+#project-table .work-row.idle-active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+#project-table .work-row.idle-active .wc-title { color: #fff; }
+
+/* ---------- Thumbnail preview (home page) ---------- */
+#thumb-wrap {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 38vw;
+  max-width: 720px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease-out;
+  z-index: 5;
+}
+#thumb-wrap.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+#thumb-link {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  cursor: pointer;
+}
+#thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: #050505;
+  transition: filter 0.2s;
+}
+#thumb-link:hover #thumb-img { filter: brightness(1.08); }
+
+#thumb-link .bracket {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  animation: bracket-pulse 2.4s ease-in-out infinite;
+}
+#thumb-link .br-tl { top: -6px; left: -6px;  border-top: 1px solid #fff;    border-left: 1px solid #fff; }
+#thumb-link .br-tr { top: -6px; right: -6px; border-top: 1px solid #fff;    border-right: 1px solid #fff; animation-delay: 0.15s; }
+#thumb-link .br-bl { bottom: -6px; left: -6px;  border-bottom: 1px solid #fff; border-left: 1px solid #fff; animation-delay: 0.30s; }
+#thumb-link .br-br { bottom: -6px; right: -6px; border-bottom: 1px solid #fff; border-right: 1px solid #fff; animation-delay: 0.45s; }
+@keyframes bracket-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.12); }
+}
+
+#thumb-caption {
+  margin-top: 14px;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+}
+
+/* ---------- Status / generic ---------- */
+#status {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  pointer-events: none;
+  z-index: 10;
+  font-family: 'Courier New', monospace;
+}
+
+/* =========================================================
+   MOBILE — ≤ 768px
+   ========================================================= */
+@media (max-width: 768px) {
+  /* Nav stacks into two centered rows */
+  #nav {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    top: 15px;
+  }
+  .nav-l, .nav-r {
+    display: flex !important;
+    gap: 8px !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  #nav-name, #nav-sub, #nav-works, #nav-index, #nav-bio {
+    font-size: 10px !important;
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+
+  /* Site-loc nudged below stacked nav */
+  #site-loc {
+    top: 140px;
+    font-size: 9px;
+  }
+  #site-loc > div { line-height: 1.4; }
+
+  /* Project table fills full width, 4 columns 0.6/1/1/1 */
+  #project-table {
+    left: 0;
+    right: 0;
+    bottom: 56px;
+    width: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+  }
+  #project-table .work-row {
+    display: grid;
+    grid-template-columns: 0.6fr 1fr 1fr 1fr;
+    column-gap: 10px;
+    width: 100%;
+    padding: 8px 0;
+    font-size: 9px;
+  }
+
+  /* Thumbnail preview wider on mobile */
+  #thumb-wrap {
+    width: 80vw !important;
+    max-width: none !important;
+  }
+
+  /* Bottom-bar smaller and mobile swap: center = canis44, right = legal */
+  #bottom-bar { font-size: 8px; }
+  /* Mobile bar text: hide the desktop content, show the mobile anchor
+     links instead. The links are real <a> tags so they're tappable —
+     mobile center goes to canis44.com, mobile right goes to legal.html. */
+  #bottom-bar .bb-c .bb-c-desktop { display: none; }
+  #bottom-bar .bb-c .bb-c-mobile  { display: inline; }
+  #bottom-bar .bb-r .bb-r-desktop { display: none; }
+  #bottom-bar .bb-r .bb-r-mobile { display: inline; }
+  #bottom-bar a { color: inherit; text-decoration: none; pointer-events: auto; }
+
+  /* Mobile non-home: unpin the bottom-bar so it sits at the natural
+     bottom of the page content (scroll to reveal). Home keeps pinned.
+     Uses position:relative (not static) so z-index applies — needed
+     because the body.page-* exclusion rule above explicitly omits
+     #bottom-bar from the z:2 promotion, leaving it behind the
+     frosted-glass overlay (#pointcloud-glass at z:1) without this. */
+  body.page-works   #bottom-bar,
+  body.page-bio     #bottom-bar,
+  body.page-project #bottom-bar {
+    position: relative !important;
+    bottom: auto !important;
+    margin-top: 40px;
+    margin-bottom: 5px;
+    padding: 0 10px;
+    z-index: 2;
+  }
+}

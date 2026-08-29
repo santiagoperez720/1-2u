@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>1*2U — Clear Side</title>
+  <meta name="description" content="1*2U — Clear Side. Cada punto del logo es un proyecto." />
+  <meta name="robots" content="index,follow" />
+  <link rel="stylesheet" href="assets/css/site.css" />
+  <style>
+    /* Column tuning for the project table (mirrors 972 home). */
+    @media (min-width: 769px) {
+      #project-table { display: inline-block; }
+      #project-table .work-row {
+        grid-template-columns: 70px 210px 230px max-content;
+        column-gap: 0; width: 100%; box-sizing: border-box;
+      }
+    }
+    #project-table .work-row { border-bottom: none !important; position: relative; }
+    #project-table .work-row::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: 0;
+      height: 1px; background: currentColor; opacity: 0.35; pointer-events: none;
+    }
+    .wc-num { font-variant-numeric: tabular-nums; opacity: 0.65; letter-spacing: 0.04em; }
+    #project-table .work-row .wc-coord {
+      display: flex !important; justify-content: flex-end !important;
+      align-items: center; text-align: right !important;
+    }
+    .wc-coord .coord-lat, .wc-coord .coord-lng { white-space: nowrap; display: inline; }
+    .wc-coord .coord-sep { display: inline; }
+    @media (max-width: 768px) {
+      .wc-coord .coord-lat, .wc-coord .coord-lng { display: block; }
+      .wc-coord { text-align: right; }
+      #project-table .work-row { grid-template-columns: 0.45fr 0.9fr 1.3fr 1fr !important; }
+    }
+
+    /* Accent tint: red markers → naranja de 1*2U (vía filtro sobre el rojo). */
+    :root { --accent: #ff5a1f; }
+
+    /* Vignette */
+    #pc-vignette {
+      position: fixed; inset: 0; pointer-events: none; z-index: 1;
+      background: radial-gradient(ellipse at center,
+        rgba(255,255,255,0) 55%, rgba(255,255,255,0.35) 88%, rgba(255,255,255,0.8) 100%);
+    }
+
+    /* Idle preview tile */
+    #idle-preview {
+      position: fixed; left: 15px; bottom: 247px; width: 280px;
+      opacity: 0; pointer-events: none; z-index: 2;
+    }
+    #idle-preview .ip-frame { position: relative; width: 100%; height: 158px; overflow: hidden; background: #000; }
+    #idle-preview img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.78; }
+    #idle-preview .ip-caption {
+      margin-top: 10px; display: flex; align-items: center; justify-content: space-between;
+      font: 500 10px/1 'Courier New', monospace; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(255,255,255,0.78);
+    }
+    #idle-preview .ip-caption .ip-arrow { display: inline-block; animation: ip-arrow-bob 1.6s ease-in-out infinite; }
+    @keyframes ip-arrow-bob { 0%,100%{transform:translateY(0);opacity:.55} 50%{transform:translateY(4px);opacity:1} }
+    #idle-preview .ip-bracket { position: absolute; width: 14px; height: 14px; border-color: rgba(255,255,255,0.7); border-style: solid; border-width: 0; }
+    #idle-preview .ip-tl { top:0; left:0; border-top-width:1px; border-left-width:1px; }
+    #idle-preview .ip-tr { top:0; right:0; border-top-width:1px; border-right-width:1px; }
+    #idle-preview .ip-bl { bottom:0; left:0; border-bottom-width:1px; border-left-width:1px; }
+    #idle-preview .ip-br { bottom:0; right:0; border-bottom-width:1px; border-right-width:1px; }
+    @media (max-width: 768px) { #idle-preview { display: none; } }
+
+    /* =========================================================
+       TEMA CLARO 1*2U — invierte la UI de 972 (fondo blanco,
+       textos oscuros). Carga después de site.css → gana por orden.
+       ========================================================= */
+    html, body { background: #ffffff; color: #111; }
+
+    /* Nav */
+    #nav #nav-name, #nav #nav-sub, #nav #nav-works, #nav #nav-index, #nav #nav-bio { color: #111; }
+    #nav #nav-name:hover, #nav #nav-sub:hover, #nav #nav-works:hover,
+    #nav #nav-index:hover, #nav #nav-bio:hover { background: rgba(0,0,0,0.07); }
+    body.page-home #nav-works { background: rgba(0,0,0,0.09) !important; }
+    #nav .br-tl, #nav .br-tr, #nav .br-bl, #nav .br-br { border-color: rgba(0,0,0,0.7) !important; }
+
+    /* Bottom bar */
+    #bottom-bar { color: rgba(0,0,0,0.4); }
+    #bottom-bar a:active { color: #000; }
+
+    /* Site-loc */
+    #site-loc { color: rgba(0,0,0,0.5); }
+    #site-loc .loc-name { color: rgba(0,0,0,0.8); }
+
+    /* Project table */
+    #project-table .work-row { color: rgba(0,0,0,0.55); border-bottom-color: rgba(0,0,0,0.14); }
+    #project-table .work-row:first-child { border-top-color: rgba(0,0,0,0.14); }
+    #project-table .work-row:hover { background: rgba(0,0,0,0.04); color: rgba(0,0,0,0.9); }
+    #project-table .work-row.active { color: #111; background: rgba(0,0,0,0.05); }
+    #project-table .work-row.active .wc-title { color: #ff5a1f; }
+    #project-table .work-row.idle-active { color: #111; background: rgba(0,0,0,0.05); }
+    #project-table .work-row.idle-active .wc-title { color: #111; }
+
+    /* Thumbnail */
+    #thumb-img { border-color: rgba(0,0,0,0.35); background: #eee; }
+    #thumb-link:hover #thumb-img { filter: brightness(0.97); }
+    #thumb-link .br-tl, #thumb-link .br-tr, #thumb-link .br-bl, #thumb-link .br-br { border-color: #111 !important; }
+    #thumb-caption { color: rgba(0,0,0,0.6); }
+
+    /* Status */
+    #status { color: rgba(0,0,0,0.5); }
+
+    /* Idle preview frame reads on white */
+    #idle-preview .ip-frame { background: #eee; }
+    #idle-preview .ip-caption { color: rgba(0,0,0,0.6); }
+    #idle-preview .ip-bracket { border-color: rgba(0,0,0,0.6); }
+  </style>
+</head>
+<body class="page-home page-pointcloud">
+
+  <div id="pc-vignette"></div>
+
+  <div id="idle-preview" aria-hidden="true">
+    <div class="ip-frame">
+      <img id="idle-preview-img" alt="" />
+      <span class="ip-bracket ip-tl"></span><span class="ip-bracket ip-tr"></span>
+      <span class="ip-bracket ip-bl"></span><span class="ip-bracket ip-br"></span>
+    </div>
+    <div class="ip-caption">
+      <span class="ip-label">Selected Works</span>
+      <span class="ip-arrow">↓</span>
+    </div>
+  </div>
+
+  <div id="nav-mount"></div>
+
+  <!-- Top-center: scene identifier -->
+  <div id="site-loc">
+    <div class="loc-name">1*2U — Clear Side</div>
+    <div>6.2476° N&nbsp;&nbsp;75.5658° W</div>
+  </div>
+
+  <!-- Bottom-left: project table -->
+  <div id="project-table">
+    <div class="work-row" data-idx="0" data-lat="6.2476° N" data-lng="75.5658° W">
+      <div class="wc wc-num">[001]</div>
+      <div class="wc wc-client">ARIA</div>
+      <div class="wc wc-title">FOTOGRAFÍA</div>
+      <div class="wc wc-coord"><span class="coord-lat">6.2476&deg; N</span><span class="coord-sep">&nbsp;&nbsp;</span><span class="coord-lng">75.5658&deg; W</span></div>
+    </div>
+    <div class="work-row" data-idx="1" data-lat="6.2085° N" data-lng="75.5710° W">
+      <div class="wc wc-num">[002]</div>
+      <div class="wc wc-client">LAD</div>
+      <div class="wc wc-title">FOTO + VIDEO</div>
+      <div class="wc wc-coord"><span class="coord-lat">6.2085&deg; N</span><span class="coord-sep">&nbsp;&nbsp;</span><span class="coord-lng">75.5710&deg; W</span></div>
+    </div>
+    <div class="work-row" data-idx="2" data-lat="6.2339° N" data-lng="75.5900° W">
+      <div class="wc wc-num">[003]</div>
+      <div class="wc wc-client">TAOHH</div>
+      <div class="wc wc-title">PRÓXIMAMENTE</div>
+      <div class="wc wc-coord"><span class="coord-lat">6.2339&deg; N</span><span class="coord-sep">&nbsp;&nbsp;</span><span class="coord-lng">75.5900&deg; W</span></div>
+    </div>
+    <div class="work-row" data-idx="3" data-lat="6.2447° N" data-lng="75.5916° W">
+      <div class="wc wc-num">[004]</div>
+      <div class="wc wc-client">DUREX RECAPP</div>
+      <div class="wc wc-title">VIDEO · CAMPAÑA</div>
+      <div class="wc wc-coord"><span class="coord-lat">6.2447&deg; N</span><span class="coord-sep">&nbsp;&nbsp;</span><span class="coord-lng">75.5916&deg; W</span></div>
+    </div>
+    <div class="work-row" data-idx="4" data-lat="6.2510° N" data-lng="75.5680° W">
+      <div class="wc wc-num">[005]</div>
+      <div class="wc wc-client">PISCINA</div>
+      <div class="wc wc-title">VIDEO</div>
+      <div class="wc wc-coord"><span class="coord-lat">6.2510&deg; N</span><span class="coord-sep">&nbsp;&nbsp;</span><span class="coord-lng">75.5680&deg; W</span></div>
+    </div>
+    <div class="work-row" data-idx="5" data-lat="6.2401° N" data-lng="75.5735° W">
+      <div class="wc wc-num">[006]</div>
+      <div class="wc wc-client">CARGA</div>
+      <div class="wc wc-title">VIDEO</div>
+      <div class="wc wc-coord"><span class="coord-lat">6.2401&deg; N</span><span class="coord-sep">&nbsp;&nbsp;</span><span class="coord-lng">75.5735&deg; W</span></div>
+    </div>
+    <div class="work-row" data-idx="6" data-lat="6.2360° N" data-lng="75.5690° W">
+      <div class="wc wc-num">[007]</div>
+      <div class="wc wc-client">17.07</div>
+      <div class="wc wc-title">VIDEO</div>
+      <div class="wc wc-coord"><span class="coord-lat">6.2360&deg; N</span><span class="coord-sep">&nbsp;&nbsp;</span><span class="coord-lng">75.5690&deg; W</span></div>
+    </div>
+  </div>
+
+  <!-- Center: thumbnail preview (focused state) -->
+  <div id="thumb-wrap">
+    <a id="thumb-link" href="#" target="_self">
+      <img id="thumb-img" alt="">
+      <span class="bracket br-tl"></span><span class="bracket br-tr"></span>
+      <span class="bracket br-bl"></span><span class="bracket br-br"></span>
+    </a>
+    <div id="thumb-caption">Ver proyecto →</div>
+  </div>
+
+  <div id="status">Loading…</div>
+
+  <div id="bottom-bar-mount"></div>
+
+  <script src="assets/js/nav.js"></script>
+  <script src="assets/js/bottom-bar.js"></script>
+  <script src="assets/vendor/three.min.js"></script>
+  <script>window.POINTCLOUD_MODE = 'interactive';</script>
+  <script src="assets/js/pointcloud.js"></script>
+</body>
+</html>

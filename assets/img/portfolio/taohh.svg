@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#161616"/>
+  <rect x="24" y="24" width="1152" height="752" fill="none" stroke="#ff5a1f" stroke-opacity="0.5" stroke-dasharray="10 8"/>
+  <g font-family="Inter,Arial,sans-serif" text-anchor="middle">
+    <text x="600" y="400" font-size="90" font-weight="800" fill="#f4f4f2">TAOHH</text>
+    <text x="600" y="450" font-size="24" font-weight="600" letter-spacing="6" fill="#ff5a1f">PRÓXIMAMENTE</text>
+  </g>
+</svg>
