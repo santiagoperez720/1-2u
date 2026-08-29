@@ -13,27 +13,38 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opa
 .nav a{color:var(--ink);text-decoration:none;opacity:.85}.nav a:hover{opacity:.4}
 .nav .brand{font-family:var(--sans);font-weight:800;font-size:15px;text-transform:none}
 .wrap{max-width:1180px;margin:0 auto;padding:0 34px;position:relative;z-index:1}
-.head{padding:124px 0 20px;text-align:center}
+.head{padding:124px 0 12px;text-align:center}
 .head .k{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
-.head h1{font-weight:800;font-size:clamp(40px,8vw,110px);letter-spacing:-.03em;line-height:.92;margin-top:12px}
-/* portada como carpeta con cinta */
-.cover{display:flex;justify-content:center;padding:22px 0 20px}
-.cover .card{position:relative;width:min(460px,80vw);transform:rotate(var(--rot,-1.5deg));
- box-shadow:0 30px 60px rgba(60,45,20,.35),0 6px 16px rgba(60,45,20,.25)}
+.head h1{font-weight:800;font-size:clamp(40px,8vw,104px);letter-spacing:-.03em;line-height:.92;margin-top:12px}
+.cover{display:flex;justify-content:center;padding:26px 0 6px}
+.cover .card{position:relative;width:min(360px,64vw);transform:rotate(var(--rot,-1.5deg));
+ box-shadow:0 26px 54px rgba(60,45,20,.32),0 6px 16px rgba(60,45,20,.22)}
 .cover .card img{width:100%;display:block}
-.cover .tape{position:absolute;top:-16px;left:50%;width:120px;height:34px;transform:translateX(-50%) rotate(-3deg);
+.cover .tape{position:absolute;top:-15px;left:50%;width:110px;height:30px;transform:translateX(-50%) rotate(-3deg);
  background:rgba(255,255,255,.35);border-left:1px dashed rgba(0,0,0,.15);border-right:1px dashed rgba(0,0,0,.15)}
-.info{display:grid;grid-template-columns:1.7fr 1fr;gap:44px;padding:34px 0 30px;border-top:1px solid var(--ink);margin-top:26px}
+.info{display:grid;grid-template-columns:1.7fr 1fr;gap:44px;padding:30px 0 28px;border-top:1px solid var(--ink);margin-top:30px}
 .info .desc{font-size:clamp(16px,1.5vw,19px);line-height:1.55;max-width:60ch}
 .info .credits{font-family:var(--mono);font-size:12px}
 .info .credits .row{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px solid var(--line)}
 .info .credits .l{color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
-.soon{margin:20px 0 10px;border:1.5px dashed var(--ink);border-radius:3px;padding:56px 24px;text-align:center;
- background:rgba(255,255,255,.14)}
+.lead{margin:6px 0 5vh}.lead img{width:100%;display:block;cursor:zoom-in}
+.flow{padding-bottom:20px}
+.row{display:flex;gap:16px;margin-bottom:5vh;align-items:flex-start}
+.row.center{justify-content:center}.row.right{justify-content:flex-end}
+.row .col{overflow:hidden}.row img{width:100%;display:block;cursor:zoom-in;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.row .col:hover img{transform:scale(1.03)}
+.w100{width:100%}.w72{width:72%}.w62{width:62%}.w60{width:60%}.w50{width:50%}.w40{width:40%}
+.soon{margin:26px 0 10px;border:1.5px dashed var(--ink);border-radius:3px;padding:56px 24px;text-align:center;background:rgba(255,255,255,.14)}
 .soon .lab{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
 .soon h2{font-family:var(--serif);font-weight:500;font-size:clamp(28px,4vw,46px);margin-top:10px;font-style:italic}
-.soon p{margin-top:12px;color:var(--dim);font-size:14px;max-width:46ch;margin-left:auto;margin-right:auto}
-footer{border-top:1px solid var(--line);margin-top:36px;padding:28px 0 70px;display:flex;justify-content:space-between;
+.soon p{margin-top:12px;color:var(--dim);font-size:14px;max-width:46ch;margin:12px auto 0}
+footer{border-top:1px solid var(--line);margin-top:30px;padding:28px 0 70px;display:flex;justify-content:space-between;
  font-family:var(--mono);font-size:12px;color:var(--dim);flex-wrap:wrap;gap:14px}
 footer a{color:var(--ink);text-decoration:none}footer .next b{color:var(--accent)}
-@media(max-width:760px){.info{grid-template-columns:1fr;gap:22px}.wrap{padding:0 20px}.head{padding:100px 0 16px}}</style></head><body><nav class="nav"><a href="../creativo.html">← Carpetas</a><a class="brand" href="../index.html">1*2U®</a><a href="../arquitectura.html">Clear Side ↗</a></nav><div class="wrap"><header class="head"><div class="k">[06] — Creativo</div><h1>COLE</h1></header><div class="cover"><div class="card" style="--rot:1.0deg"><span class="tape"></span><img src="../assets/creativo/cole.jpg" alt="COLE"></div></div><div class="info"><div class="desc">COLE — proyecto del lado Creativo de 1*2U. Campaña, dirección de imagen y piezas gráficas.</div><div class="credits"><div class="row"><span class="l">Cliente</span><span>COLE</span></div><div class="row"><span class="l">Año</span><span>2026</span></div><div class="row"><span class="l">Rol</span><span>Campaña · Gráfico</span></div><div class="row"><span class="l">Lugar</span><span>Medellín, CO</span></div></div></div><div class="soon"><div class="lab">En proceso</div><h2>Contenido próximamente</h2><p>Aquí van las fotos y videos de este proyecto. Súbelos y armamos la galería completa.</p></div><footer><a href="../creativo.html">← Todas las carpetas</a><a class="next" href="diseno-grafico.html">Siguiente — <b>DISEÑO GRÁFICO</b> →</a></footer></div></body></html>
+.lb{position:fixed;inset:0;z-index:80;background:rgba(20,18,14,.95);display:none;align-items:center;justify-content:center;cursor:zoom-out}
+.lb.open{display:flex}.lb img{max-width:92vw;max-height:90vh;object-fit:contain}.lb .x{position:absolute;top:20px;right:26px;color:#fff;font-size:26px;background:none;border:0;cursor:pointer}
+@media(max-width:760px){.info{grid-template-columns:1fr;gap:22px}.row{flex-direction:column;gap:14px}
+ .w100,.w72,.w62,.w60,.w50,.w40{width:100%}.wrap{padding:0 20px}.head{padding:100px 0 10px}}</style></head><body><nav class="nav"><a href="../creativo.html">← Carpetas</a><a class="brand" href="../index.html">1*2U®</a><a href="../arquitectura.html">Clear Side ↗</a></nav><div class="wrap"><header class="head"><div class="k">[06] — Creativo</div><h1>COLE</h1></header><div class="cover"><div class="card" style="--rot:1.0deg"><span class="tape"></span><img src="../assets/creativo/cole.jpg" alt="COLE"></div></div><div class="info"><div class="desc">COLE — proyecto del lado Creativo de 1*2U. Campaña, dirección de imagen y piezas gráficas.</div><div class="credits"><div class="row"><span class="l">Cliente</span><span>COLE</span></div><div class="row"><span class="l">Año</span><span>2026</span></div><div class="row"><span class="l">Rol</span><span>Campaña · Gráfico</span></div><div class="row"><span class="l">Lugar</span><span>Medellín, CO</span></div></div></div><div class="lead"><img loading="lazy" src="../assets/proyectos/cole/01.jpg" alt=""></div><div class="flow"><div class="row center"><div class="col w72"><img loading="lazy" src="../assets/proyectos/cole/02.jpg" alt=""></div></div><div class="row"><div class="col w50"><img loading="lazy" src="../assets/proyectos/cole/03.jpg" alt=""></div><div class="col w50"><img loading="lazy" src="../assets/proyectos/cole/04.jpg" alt=""></div></div><div class="row"><div class="col w62"><img loading="lazy" src="../assets/proyectos/cole/05.jpg" alt=""></div></div><div class="row"><div class="col w60"><img loading="lazy" src="../assets/proyectos/cole/06.jpg" alt=""></div><div class="col w40"><img loading="lazy" src="../assets/proyectos/cole/07.jpg" alt=""></div></div><div class="row center"><div class="col w72"><img loading="lazy" src="../assets/proyectos/cole/08.jpg" alt=""></div></div></div><footer><a href="../creativo.html">← Todas las carpetas</a><a class="next" href="diseno-grafico.html">Siguiente — <b>DISEÑO GRÁFICO</b> →</a></footer></div><div class="lb" id="lb"><button class="x" onclick="closeLb()">✕</button><img id="lbimg" src=""></div><script>function openLb(s){document.getElementById('lbimg').src=s;document.getElementById('lb').classList.add('open');}
+function closeLb(){document.getElementById('lb').classList.remove('open');}
+document.querySelectorAll('.lead img,.row img').forEach(function(im){im.addEventListener('click',function(){openLb(this.src);});});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLb();});</script></body></html>
