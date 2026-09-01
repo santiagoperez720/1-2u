@@ -46,7 +46,8 @@ footer a{color:var(--ink);text-decoration:none}footer .next b{color:var(--accent
 function openLb(s){document.getElementById('lbimg').src=s;document.getElementById('lb').classList.add('open');}
 function closeLb(){document.getElementById('lb').classList.remove('open');}
 document.querySelectorAll('.lead img,.row img').forEach(function(im){im.addEventListener('click',function(){openLb(this.src);});});
-document.querySelectorAll('.player').forEach(function(p){var id=(p.dataset.vimeo||'').trim();
- if(id){p.innerHTML='<iframe src="https://player.vimeo.com/video/'+id+'?title=0&byline=0&portrait=0" allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>';}});
+document.querySelectorAll('.player').forEach(function(p){var v=(p.dataset.vimeo||'').trim();
+ if(v){var a=v.split('/'),id=a[0],h=a[1]?'&h='+a[1]:'';
+ p.innerHTML='<iframe src="https://player.vimeo.com/video/'+id+'?title=0&byline=0&portrait=0&dnt=1'+h+'" allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>';}});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLb();});
 </script></body></html>
