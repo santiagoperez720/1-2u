@@ -65,6 +65,41 @@
     #idle-preview .ip-br { bottom:0; right:0; border-bottom-width:1px; border-right-width:1px; }
     @media (max-width: 768px) { #idle-preview { display: none; } }
 
+
+    /* =========================================================
+       Aviso de interacción — desaparece al primer scroll/swipe
+       ========================================================= */
+    #swipe-hint {
+      position: fixed; right: 58px; bottom: 46px;
+      z-index: 16; pointer-events: none; display: flex; flex-direction: column;
+      align-items: center; gap: 8px; white-space: nowrap;
+      font: 500 11px/1 'Courier New', monospace; letter-spacing: 0.28em; text-transform: uppercase;
+      transition: opacity .55s ease, transform .55s ease;
+    }
+    #swipe-hint.gone { opacity: 0; transform: translateY(10px); }
+    #swipe-hint .sh-text {
+      background: linear-gradient(100deg,
+        rgba(0,0,0,.26) 0%, rgba(0,0,0,.26) 40%,
+        var(--accent) 50%,
+        rgba(0,0,0,.26) 60%, rgba(0,0,0,.26) 100%);
+      background-size: 260% 100%;
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+      animation: sh-sweep 3.4s linear infinite;
+    }
+    @keyframes sh-sweep { from { background-position: 170% 0; } to { background-position: -70% 0; } }
+    #swipe-hint .sh-chev { color: rgba(0,0,0,.28); animation: ip-arrow-bob 1.6s ease-in-out infinite; }
+    @media (prefers-reduced-motion: reduce) {
+      #swipe-hint .sh-text { animation: none; -webkit-text-fill-color: rgba(0,0,0,.45); color: rgba(0,0,0,.45); }
+      #swipe-hint .sh-chev { animation: none; }
+    }
+    @media (max-width: 768px) {
+      #swipe-hint { right: auto; left: 50%; transform: translateX(-50%);
+        bottom: auto; top: 68px; font-size: 10px; letter-spacing: 0.2em; gap: 6px; }
+      #swipe-hint.gone { transform: translateX(-50%) translateY(10px); }
+      #swipe-hint .sh-chev { display: none; }
+    }
+
     /* =========================================================
        TEMA CLARO 1*2U — invierte la UI de 972 (fondo blanco,
        textos oscuros). Carga después de site.css → gana por orden.
@@ -151,7 +186,7 @@
     <div class="work-row" data-idx="2" data-lat="6.2339° N" data-lng="75.5900° W">
       <div class="wc wc-num">[003]</div>
       <div class="wc wc-client">TAOHH</div>
-      <div class="wc wc-title">PRÓXIMAMENTE</div>
+      <div class="wc wc-title">VIDEO · SERIE</div>
       <div class="wc wc-coord"><span class="coord-lat">6.2339&deg; N</span><span class="coord-sep">&nbsp;&nbsp;</span><span class="coord-lng">75.5900&deg; W</span></div>
     </div>
     <div class="work-row" data-idx="3" data-lat="6.2447° N" data-lng="75.5916° W">
@@ -190,6 +225,10 @@
     <div id="thumb-caption">Ver proyecto →</div>
   </div>
 
+  <div id="swipe-hint" aria-hidden="true">
+    <span class="sh-text" data-touch="Swipe to unlock" data-wheel="Scroll to unlock">Scroll to unlock</span>
+    <span class="sh-chev">&darr;</span>
+  </div>
   <div id="status">Loading…</div>
 
   <div id="bottom-bar-mount"></div>
@@ -199,5 +238,23 @@
   <script src="assets/vendor/three.min.js"></script>
   <script>window.POINTCLOUD_MODE = 'interactive';</script>
   <script src="assets/js/pointcloud.js"></script>
+  <script>
+    /* Aviso de interacción: texto según el dispositivo, se va al primer gesto. */
+    (function () {
+      var h = document.getElementById('swipe-hint'); if (!h) return;
+      var t = h.querySelector('.sh-text');
+      var esTactil = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+      t.textContent = esTactil ? t.dataset.touch : t.dataset.wheel;
+      var ido = false;
+      function ocultar() {
+        if (ido) return; ido = true;
+        h.classList.add('gone');
+        setTimeout(function () { h.style.display = 'none'; }, 650);
+      }
+      ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (ev) {
+        window.addEventListener(ev, ocultar, { passive: true, once: true });
+      });
+    })();
+  </script>
 </body>
 </html>
