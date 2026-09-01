@@ -41,7 +41,7 @@
   .half:hover .hint{opacity:1;transform:translateY(0)}
   .markwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
     pointer-events:none;z-index:5}
-  .markwrap .wordmark{color:var(--accent);border-top-color:var(--accent);font-size:clamp(64px,12vw,168px)}
+  .markwrap .wordmark{color:var(--accent);border-top-color:var(--accent);font-size:min(12vw,200px);white-space:nowrap}.wordmark .ast{font-size:.82em;line-height:0;vertical-align:.30em;margin-left:.02em}
 
   /* intro + footer */
   .lead{padding:64px 34px 40px;max-width:1240px;margin:0 auto}
@@ -53,7 +53,7 @@
 
   @media(max-width:820px){
     .split{flex-direction:column}
-    .markwrap .wordmark{font-size:clamp(56px,18vw,110px)}
+    .markwrap .wordmark{font-size:min(12.5vw,110px)}
     .nav{padding:16px 20px;font-size:13px}.nav .left{gap:16px}
     .lead{padding-left:20px;padding-right:20px}
   }
@@ -80,7 +80,7 @@
     <a class="half half-white" href="arquitectura.html">
       <div class="hint"><span>Clear Side</span><span>→</span></div>
     </a>
-    <div class="markwrap"><span class="wordmark">1*2U</span></div>
+    <div class="markwrap"><span class="wordmark">ONETWOYOU<span class="ast">*</span></span></div>
   </div>
 
   <div class="lead">
