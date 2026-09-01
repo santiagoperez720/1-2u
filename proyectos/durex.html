@@ -31,7 +31,7 @@ body{font-family:var(--f);background:var(--paper);color:var(--ink);-webkit-font-
 .player .badge{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
  color:#fff;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,.5)}
 .player .badge .ic{width:56px;height:56px;border:2px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px}
-.player .vlabel{font-size:11px;opacity:.8}.player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.player .vlabel{font-size:11px;opacity:.8}.player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.player[data-vimeo]:not([data-vimeo='']){cursor:pointer}.player[data-vimeo]:not([data-vimeo='']):hover .poster{opacity:1}.player[data-vimeo]:not([data-vimeo='']):hover .badge .ic{background:rgba(255,255,255,.15)}.player .badge .ic{transition:background .25s}.player .poster{transition:opacity .35s}
 .soon{padding:120px 0;text-align:center}.soon h2{font-size:clamp(30px,5vw,54px);font-weight:800;letter-spacing:-.02em}
 .soon p{margin-top:16px;color:var(--dim);font-size:15px;letter-spacing:.08em;text-transform:uppercase}
 .statement{padding:50px 0 40px}.statement .rule{border-top:1.5px dashed rgba(0,0,0,.5);width:100%;margin-bottom:40px}
@@ -47,7 +47,11 @@ function openLb(s){document.getElementById('lbimg').src=s;document.getElementByI
 function closeLb(){document.getElementById('lb').classList.remove('open');}
 document.querySelectorAll('.lead img,.row img').forEach(function(im){im.addEventListener('click',function(){openLb(this.src);});});
 document.querySelectorAll('.player').forEach(function(p){var v=(p.dataset.vimeo||'').trim();
- if(v){var a=v.split('/'),id=a[0],h=a[1]?'&h='+a[1]:'';
- p.innerHTML='<iframe src="https://player.vimeo.com/video/'+id+'?title=0&byline=0&portrait=0&dnt=1'+h+'" allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>';}});
+ if(!v)return;
+ p.addEventListener('click',function(){
+  if(p.dataset.on)return; p.dataset.on='1';
+  var a=v.split('/'),id=a[0],h=a[1]?'&h='+a[1]:'';
+  p.innerHTML='<iframe src="https://player.vimeo.com/video/'+id+'?title=0&byline=0&portrait=0&dnt=1&autoplay=1'+h+'" allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>';
+ });});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLb();});
 </script></body></html>
