@@ -69,35 +69,50 @@
     /* =========================================================
        Aviso de interacción — desaparece al primer scroll/swipe
        ========================================================= */
+    /* Aviso "Scroll / Swipe to unlock": centrado, grande y con un ícono animado
+       (ratón con rueda en desktop, flecha que baja en táctil). Se va al primer gesto. */
     #swipe-hint {
-      position: fixed; right: 58px; bottom: 46px;
-      z-index: 16; pointer-events: none; display: flex; flex-direction: column;
-      align-items: center; gap: 8px; white-space: nowrap;
-      font: 500 11px/1 'Courier New', monospace; letter-spacing: 0.28em; text-transform: uppercase;
+      position: fixed; left: 50%; top: 64px; transform: translateX(-50%);
+      z-index: 16; pointer-events: none; display: flex; flex-direction: row;
+      align-items: center; gap: 14px; white-space: nowrap;
+      padding: 10px 20px 10px 14px; border-radius: 100px;
+      background: rgba(255,255,255,.9); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      box-shadow: 0 6px 24px rgba(0,0,0,.08);
+      font: 700 15px/1 'Courier New', monospace; letter-spacing: 0.34em; text-transform: uppercase;
+      opacity: 0; animation: sh-in .9s ease .9s forwards;
       transition: opacity .55s ease, transform .55s ease;
     }
-    #swipe-hint.gone { opacity: 0; transform: translateY(10px); }
+    @keyframes sh-in { to { opacity: 1; } }
+    #swipe-hint.gone { opacity: 0 !important; animation: none; transform: translateX(-50%) translateY(14px); }
     #swipe-hint .sh-text {
       background: linear-gradient(100deg,
-        rgba(0,0,0,.26) 0%, rgba(0,0,0,.26) 40%,
+        rgba(0,0,0,.72) 0%, rgba(0,0,0,.72) 40%,
         var(--accent) 50%,
-        rgba(0,0,0,.26) 60%, rgba(0,0,0,.26) 100%);
+        rgba(0,0,0,.72) 60%, rgba(0,0,0,.72) 100%);
       background-size: 260% 100%;
       -webkit-background-clip: text; background-clip: text;
       -webkit-text-fill-color: transparent; color: transparent;
-      animation: sh-sweep 3.4s linear infinite;
+      animation: sh-sweep 3s linear infinite;
     }
     @keyframes sh-sweep { from { background-position: 170% 0; } to { background-position: -70% 0; } }
-    #swipe-hint .sh-chev { color: rgba(0,0,0,.28); animation: ip-arrow-bob 1.6s ease-in-out infinite; }
+    /* ratón: cápsula con la rueda bajando */
+    #swipe-hint .sh-mouse { position: relative; width: 18px; height: 30px; border: 2px solid rgba(0,0,0,.6); border-radius: 12px; }
+    #swipe-hint .sh-mouse::after { content: ''; position: absolute; left: 50%; top: 5px; width: 4px; height: 7px; margin-left: -2px;
+      border-radius: 2px; background: var(--accent); animation: sh-wheel 1.5s ease-in-out infinite; }
+    @keyframes sh-wheel { 0%{transform:translateY(0);opacity:1} 70%{transform:translateY(10px);opacity:0} 71%{transform:translateY(0);opacity:0} 100%{opacity:1} }
+    /* táctil: flecha grande que baja */
+    #swipe-hint .sh-chev { display: none; font: 700 26px/1 'Courier New', monospace; color: var(--accent); animation: sh-drop 1.4s ease-in-out infinite; }
+    @keyframes sh-drop { 0%,100%{transform:translateY(-4px);opacity:.35} 50%{transform:translateY(6px);opacity:1} }
+    html.touch #swipe-hint .sh-mouse { display: none; }
+    html.touch #swipe-hint .sh-chev { display: block; }
     @media (prefers-reduced-motion: reduce) {
-      #swipe-hint .sh-text { animation: none; -webkit-text-fill-color: rgba(0,0,0,.45); color: rgba(0,0,0,.45); }
-      #swipe-hint .sh-chev { animation: none; }
+      #swipe-hint { animation: none; opacity: 1; }
+      #swipe-hint .sh-text { animation: none; -webkit-text-fill-color: rgba(0,0,0,.72); color: rgba(0,0,0,.72); }
+      #swipe-hint .sh-mouse::after, #swipe-hint .sh-chev { animation: none; }
     }
     @media (max-width: 768px) {
-      #swipe-hint { right: auto; left: 50%; transform: translateX(-50%);
-        bottom: auto; top: 68px; font-size: 10px; letter-spacing: 0.2em; gap: 6px; }
-      #swipe-hint.gone { transform: translateX(-50%) translateY(10px); }
-      #swipe-hint .sh-chev { display: none; }
+      #swipe-hint { top: 76px; flex-direction: column; font-size: 12px; letter-spacing: 0.26em; gap: 8px; padding: 12px 18px; border-radius: 22px; }
+      #swipe-hint .sh-chev { font-size: 22px; }
     }
 
     /* =========================================================
@@ -220,8 +235,9 @@
   </div>
 
   <div id="swipe-hint" aria-hidden="true">
-    <span class="sh-text" data-touch="Swipe to unlock" data-wheel="Scroll to unlock">Scroll to unlock</span>
+    <span class="sh-mouse"></span>
     <span class="sh-chev">&darr;</span>
+    <span class="sh-text" data-touch="Swipe to unlock" data-wheel="Scroll to unlock">Scroll to unlock</span>
   </div>
   <div id="status">Loading…</div>
 
@@ -239,6 +255,7 @@
       var t = h.querySelector('.sh-text');
       var esTactil = window.matchMedia('(hover: none), (pointer: coarse)').matches;
       t.textContent = esTactil ? t.dataset.touch : t.dataset.wheel;
+      if (esTactil) document.documentElement.classList.add('touch');
       var ido = false;
       function ocultar() {
         if (ido) return; ido = true;
