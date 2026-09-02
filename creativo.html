@@ -37,9 +37,9 @@
   .folder{position:absolute;top:50%;left:50%;width:320px;height:400px;
     transform:translate(-50%,-50%);will-change:transform,opacity;
     transition:transform .55s cubic-bezier(.2,.7,.2,1),opacity .55s ease}
-  .folder .card{position:relative;width:100%;height:100%;border-radius:3px;overflow:hidden;
-    box-shadow:0 30px 60px rgba(40,30,10,.45),0 4px 12px rgba(40,30,10,.3);background:#e9e1d2}
-  .folder img{width:100%;height:100%;object-fit:cover;display:block}
+  .folder .card{position:relative;width:100%;height:100%;
+    filter:drop-shadow(0 26px 40px rgba(40,30,10,.42)) drop-shadow(0 3px 8px rgba(40,30,10,.28))}
+  .folder img{width:100%;height:100%;object-fit:contain;display:block}
   .dragging .folder{transition:none}
 
   /* ---------- info activa ---------- */
@@ -96,20 +96,22 @@
 
 <script>
   var FOLDERS = [
-    {img:'assets/creativo/nntlab.jpg',    title:'NNT LAB',             href:'proyectos/nnt-lab.html'},
-    {img:'assets/creativo/lacasa.jpg',    title:'LA CASA QUE HABITO',  href:'proyectos/la-casa-que-habito.html'},
-    {img:'assets/creativo/geroangel.jpg', title:'GERO ANGEL',          href:'proyectos/gero-angel.html'},
-    {img:'assets/creativo/livin.jpg',     title:'LIVIN EASYWEAR',      href:'proyectos/livin.html'},
-    {img:'assets/creativo/bbi.jpg',       title:'BABY BLEU INTERLUDE', href:'proyectos/baby-bleu-interlude.html'},
-    {img:'assets/creativo/cole.jpg',      title:'COLE',                href:'proyectos/cole.html'},
-    {img:'assets/creativo/disenografico.jpg', title:'DISEÑO GRÁFICO',  href:'proyectos/diseno-grafico.html'},
-    {img:'assets/creativo/power.jpg',     title:'POWER',               href:'proyectos/power.html'}
+    {img:'assets/creativo/nntlab.png',    title:'NNT LAB',             href:'proyectos/nnt-lab.html'},
+    {img:'assets/creativo/lacasa.png',    title:'LA CASA QUE HABITO',  href:'proyectos/la-casa-que-habito.html'},
+    {img:'assets/creativo/geroangel.png', title:'GERO ANGEL',          href:'proyectos/gero-angel.html'},
+    {img:'assets/creativo/livin.png',     title:'LIVIN EASYWEAR',      href:'proyectos/livin.html'},
+    {img:'assets/creativo/bbi.png',       title:'BABY BLEU INTERLUDE', href:'proyectos/baby-bleu-interlude.html'},
+    {img:'assets/creativo/cole.png',      title:'COLE',                href:'proyectos/cole.html'},
+    {img:'assets/creativo/disenografico.png', title:'DISEÑO GRÁFICO',  href:'proyectos/diseno-grafico.html'},
+    {img:'assets/creativo/power.png',     title:'POWER',               href:'proyectos/power.html'}
   ];
   var deck=document.getElementById('deck'), dots=document.getElementById('dots');
   var cards=[];
   FOLDERS.forEach(function(f,i){
     var el=document.createElement('div'); el.className='folder';
-    el.innerHTML='<div class="card"><img src="'+f.img+'" alt="'+f.title+'"></div>';
+    el.innerHTML='<div class="card"><picture>'+
+      '<source type="image/webp" srcset="'+f.img.replace('.png','.webp')+'">'+
+      '<img src="'+f.img+'" alt="'+f.title+'"></picture></div>';
     el.addEventListener('click',function(){ if(Math.round(pos)===i) location.href=f.href; else go(i); });
     deck.appendChild(el); cards.push(el);
     var d=document.createElement('i'); d.addEventListener('click',function(){go(i);}); dots.appendChild(d);
