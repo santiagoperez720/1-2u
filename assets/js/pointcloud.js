@@ -141,7 +141,7 @@
   // cuando existan las páginas: projects/720-web.html, etc.
   var PROJECT_URLS = [
     'proyectos/aria.html', 'proyectos/lad.html', 'proyectos/taohh.html',
-    'proyectos/piscina.html', 'proyectos/carga.html', 'proyectos/p1707.html'
+    'proyectos/wakebio-pool.html', 'proyectos/opening-wake.html', 'proyectos/sastra-ecosystem.html'
   ];
   // Preload all project thumbnails so transitions never show a stale
   // image while the next one is still fetching. Without this, fast

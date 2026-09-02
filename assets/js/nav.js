@@ -23,7 +23,7 @@
           '<span class="bracket br-tl"></span><span class="bracket br-tr"></span>' +
           '<span class="bracket br-bl"></span><span class="bracket br-br"></span>' +
         '</a>' +
-        '<a id="nav-bio" href="#">CONTACTO' +
+        '<a id="nav-bio" href="information.html">CONTACTO' +
           '<span class="bracket br-tl"></span><span class="bracket br-tr"></span>' +
           '<span class="bracket br-bl"></span><span class="bracket br-br"></span>' +
         '</a>' +
