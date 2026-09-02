@@ -132,7 +132,6 @@
     (inProjects ? '../' : '') + 'assets/img/portfolio/aria.jpg',
     (inProjects ? '../' : '') + 'assets/img/portfolio/lad.jpg',
     (inProjects ? '../' : '') + 'assets/img/portfolio/taohh.svg',
-    (inProjects ? '../' : '') + 'assets/img/portfolio/durex.jpg',
     (inProjects ? '../' : '') + 'assets/img/portfolio/piscina.jpg',
     (inProjects ? '../' : '') + 'assets/img/portfolio/carga.jpg',
     (inProjects ? '../' : '') + 'assets/img/portfolio/p1707.jpg'
@@ -142,7 +141,7 @@
   // cuando existan las páginas: projects/720-web.html, etc.
   var PROJECT_URLS = [
     'proyectos/aria.html', 'proyectos/lad.html', 'proyectos/taohh.html',
-    'proyectos/durex.html', 'proyectos/piscina.html', 'proyectos/carga.html', 'proyectos/p1707.html'
+    'proyectos/piscina.html', 'proyectos/carga.html', 'proyectos/p1707.html'
   ];
   // Preload all project thumbnails so transitions never show a stale
   // image while the next one is still fetching. Without this, fast
