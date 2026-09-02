@@ -131,10 +131,10 @@
   var THUMB_URLS = [
     (inProjects ? '../' : '') + 'assets/img/portfolio/aria.jpg',
     (inProjects ? '../' : '') + 'assets/img/portfolio/lad.jpg',
-    (inProjects ? '../' : '') + 'assets/img/portfolio/taohh.svg',
-    (inProjects ? '../' : '') + 'assets/img/portfolio/piscina.jpg',
-    (inProjects ? '../' : '') + 'assets/img/portfolio/carga.jpg',
-    (inProjects ? '../' : '') + 'assets/img/portfolio/p1707.jpg'
+    (inProjects ? '../' : '') + 'assets/img/portfolio/taohh.jpg',
+    (inProjects ? '../' : '') + 'assets/img/portfolio/wakebio-pool.jpg',
+    (inProjects ? '../' : '') + 'assets/img/portfolio/opening-wake.jpg',
+    (inProjects ? '../' : '') + 'assets/img/portfolio/sastra-ecosystem.jpg'
   ];
   // Páginas de proyecto pendientes (Sección D). Por ahora '#' → el clic
   // no navega a ninguna parte (no da 404). Reemplazar por las rutas reales
