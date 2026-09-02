@@ -295,56 +295,78 @@
         visible[i] = 1;
       }
 
-      // ---- Markers at RANDOM locations scattered across the whole map ----
-      // Candidates = any visible vertex within safe screen margins (no
-      // density requirement), so picks land anywhere in the scene (ground,
-      // grass, trees, tower) instead of clustering on the densest mass.
-      var marginX = W * 0.06;
-      var marginTop = H * 0.08;
-      var marginBottom = H * 0.16;
-      var candidates = [];
-      for (var p = 0; p < n; p++) {
-        if (!visible[p]) continue;
-        if (sx[p] < marginX || sx[p] > W - marginX) continue;
-        if (sy[p] < marginTop || sy[p] > H - marginBottom) continue;
-        candidates.push(p);
+      // ---- Markers COLOCADOS: repartidos sobre el anillo del óvalo ----
+      // Antes se elegían vértices al azar (con semilla) y quedaban donde
+      // cayeran. Ahora se reparten a propósito: NP posiciones equidistantes
+      // alrededor del logo — 12h, 2h, 4h… — y en cada una se toma el vértice
+      // visible MÁS ALEJADO del centro dentro de esa cuña, que es justo el
+      // borde punteado del óvalo. El orden de la tabla se lee en sentido
+      // horario empezando arriba.
+      var cx = 0, cy = 0, nv = 0;
+      for (var p0 = 0; p0 < n; p0++) {
+        if (!visible[p0]) continue;
+        cx += sx[p0]; cy += sy[p0]; nv++;
       }
-      console.log('[pickRedVertices] scatter candidates=' + candidates.length);
+      if (!nv) return [];
+      cx /= nv; cy /= nv;
 
-      if (candidates.length <= NP) return candidates.slice(0, NP);
+      var TAU = Math.PI * 2;
+      var wedge = TAU / NP;
+      var marginX = W * 0.05, marginTop = H * 0.06, marginBottom = H * 0.16; // deja libre la tabla de proyectos
 
-      // Deterministic (seeded) RNG so the 5 dots land in the SAME scattered
-      // positions on every load. Change MARKER_SEED for a different — but
-      // still fixed — arrangement.
-      var MARKER_SEED = 20260820;
-      var _s = MARKER_SEED >>> 0;
-      function rng() {
-        _s |= 0; _s = (_s + 0x6D2B79F5) | 0;
-        var t = Math.imul(_s ^ (_s >>> 15), 1 | _s);
-        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      // Ángulo con 0 = arriba y creciendo en sentido horario.
+      function slotAngle(i) {
+        var dx = sx[i] - cx, dy = sy[i] - cy;
+        var a = Math.atan2(dx, -dy);
+        return a < 0 ? a + TAU : a;
+      }
+      function radius2(i) {
+        var dx = sx[i] - cx, dy = sy[i] - cy;
+        return dx * dx + dy * dy;
       }
 
-      // Pick 5 candidates via seeded RNG, rejecting any that land too close
-      // to one already chosen (min screen separation) so dots never overlap.
-      var chosen = [];
-      var MINSEP = Math.min(W, H) * 0.14;
-      var minSep2 = MINSEP * MINSEP;
-      var guard = 0;
-      while (chosen.length < NP && guard < 6000) {
-        guard++;
-        var cand = candidates[Math.floor(rng() * candidates.length)];
-        var ok = true;
-        for (var c2 = 0; c2 < chosen.length; c2++) {
-          var dx = sx[cand] - sx[chosen[c2]], dy = sy[cand] - sy[chosen[c2]];
-          if (dx * dx + dy * dy < minSep2) { ok = false; break; }
+      var pool = [];
+      for (var q = 0; q < n; q++) {
+        if (!visible[q]) continue;
+        if (sx[q] < marginX || sx[q] > W - marginX) continue;
+        if (sy[q] < marginTop || sy[q] > H - marginBottom) continue;
+        pool.push(q);
+      }
+      if (pool.length <= NP) return pool.slice(0, NP);
+
+      var best = new Array(NP), bestR = new Array(NP);
+      for (var k = 0; k < NP; k++) { best[k] = -1; bestR[k] = -1; }
+
+      // Dos pasadas: primero pegado a la hora exacta, después la cuña
+      // completa para las horas que quedaron vacías por el recorte.
+      [0.30, 0.5].forEach(function (tol) {
+        for (var j = 0; j < pool.length; j++) {
+          var idx = pool[j];
+          var a = slotAngle(idx);
+          var slot = Math.round(a / wedge) % NP;
+          if (best[slot] !== -1 && tol > 0.30) continue;
+          var d = Math.abs(a - slot * wedge);
+          if (d > Math.PI) d = TAU - d;
+          if (d > wedge * tol) continue;
+          var r = radius2(idx);
+          if (r > bestR[slot]) { bestR[slot] = r; best[slot] = idx; }
         }
-        if (ok) chosen.push(cand);
+      });
+
+      // Último recurso: el punto más lejano que no esté ya tomado.
+      var chosen = [];
+      for (var s2 = 0; s2 < NP; s2++) {
+        if (best[s2] !== -1) { chosen.push(best[s2]); continue; }
+        var far = -1, farR = -1;
+        for (var j2 = 0; j2 < pool.length; j2++) {
+          var c2 = pool[j2];
+          if (chosen.indexOf(c2) !== -1) continue;
+          var r2 = radius2(c2);
+          if (r2 > farR) { farR = r2; far = c2; }
+        }
+        chosen.push(far === -1 ? pool[s2 % pool.length] : far);
       }
-      // If the separation guard couldn't place 5, top up (still seeded).
-      while (chosen.length < NP) {
-        chosen.push(candidates[Math.floor(rng() * candidates.length)]);
-      }
+      console.log('[pickRedVertices] markers en el anillo: ' + chosen.length + '/' + NP);
       return chosen;
     }
 
@@ -936,6 +958,23 @@
     // idle cycle currently points at, and ease the others back to normal.
     var markerBaseSizes = redMarkers.map(function (mk) { return mk.material.size; });
 
+    // ----- Despliegue de los markers -----
+    // Al cargar no están: brotan uno por uno alrededor del óvalo, en sentido
+    // horario, con un pequeño rebote al final. markerReveal() devuelve el
+    // factor de tamaño (0 → 1) de cada marker según el reloj de despliegue.
+    redMarkers.forEach(function (mk) { mk.material.size = 0; });
+    var MARKER_DELAY   = 1.0;   // s antes de que salga el primero
+    var MARKER_STAGGER = 0.16;  // s entre uno y el siguiente
+    var MARKER_GROW    = 0.55;  // s que tarda cada uno en aparecer
+    var revealClock = 0;
+    function markerReveal(i) {
+      var t = (revealClock - MARKER_DELAY - i * MARKER_STAGGER) / MARKER_GROW;
+      if (t <= 0) return 0;
+      if (t >= 1) return 1;
+      var b = t - 1;                       // ease-out-back: se pasa y vuelve
+      return 1 + b * b * (2.70158 * b + 1.70158);
+    }
+
     // Pre-compute the focused camera state for a given project so we can
     // lerp toward it during idle without committing to a full transition.
     var hintCamPos = new THREE.Vector3();
@@ -1090,9 +1129,12 @@
       // settle to base size.
       if (redMarkers.length > 0) {
         var idleActive = currentState === 0 && idleTime > IDLE_HINT_DELAY * 0.5;
+        revealClock += dt;
         for (var mi = 0; mi < redMarkers.length; mi++) {
           var mkMat = redMarkers[mi].material;
           var base = markerBaseSizes[mi];
+          var rev = markerReveal(mi);
+          if (rev < 1) { mkMat.size = base * rev; continue; }  // aún desplegándose
           var target = (idleActive && mi === idleCycleIndex)
             ? base * (1 + Math.sin(idleTime * 2.4) * 0.7 + 0.8)
             : base;
