@@ -150,6 +150,18 @@
     #thumb-link:hover #thumb-img { filter: brightness(0.97); }
     #thumb-link .br-tl, #thumb-link .br-tr, #thumb-link .br-bl, #thumb-link .br-br { border-color: #111 !important; }
     #thumb-caption { color: rgba(0,0,0,0.6); }
+    /* Preview del holograma: el proyecto se ve en movimiento, no como foto fija.
+       El <video> se recorta solo con object-fit; el iframe de Vimeo se escala
+       para cubrir la ventana 16/9 (vertical = mucho más alto, se recorta). */
+    #thumb-media { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+    #thumb-media video { position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; display: block; }
+    #thumb-media iframe { position: absolute; left: 0; top: 50%; width: 100%; border: 0;
+      transform: translateY(-50%); display: block; }
+    #thumb-media.h iframe { aspect-ratio: 16 / 9; }
+    #thumb-media.v iframe { aspect-ratio: 9 / 16; }
+    #thumb-img { transition: opacity .45s ease; }
+    #thumb-link.playing #thumb-img { opacity: 0; }
 
     /* Status */
     #status { color: rgba(0,0,0,0.5); }
@@ -228,6 +240,7 @@
   <div id="thumb-wrap">
     <a id="thumb-link" href="#" target="_self">
       <img id="thumb-img" alt="">
+      <div id="thumb-media" aria-hidden="true"></div>
       <span class="bracket br-tl"></span><span class="bracket br-tr"></span>
       <span class="bracket br-bl"></span><span class="bracket br-br"></span>
     </a>

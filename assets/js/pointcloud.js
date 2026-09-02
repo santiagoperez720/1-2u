@@ -123,6 +123,51 @@
   var thumbWrap   = document.getElementById('thumb-wrap');
   var thumbImg    = document.getElementById('thumb-img');
   var thumbLink   = document.getElementById('thumb-link');
+  var thumbMedia  = document.getElementById('thumb-media');
+
+  // --- Preview en movimiento -------------------------------------
+  // Solo hay un preview a la vez: al cambiar de proyecto (o al volver al
+  // overview) se vacía, así nada sigue reproduciéndose fuera de pantalla.
+  var thumbMediaIdx = -1;
+  function clearThumbMedia() {
+    thumbMediaIdx = -1;
+    if (!thumbMedia) return;
+    thumbMedia.innerHTML = '';
+    thumbMedia.className = '';
+    if (thumbLink) thumbLink.classList.remove('playing');
+  }
+  function setThumbMedia(idx) {
+    if (!thumbMedia || thumbMediaIdx === idx) return;
+    clearThumbMedia();
+    var m = (typeof PREVIEW_MEDIA !== 'undefined') && PREVIEW_MEDIA[idx];
+    if (!m) return;
+    thumbMediaIdx = idx;
+    if (m.mp4) {
+      var v = document.createElement('video');
+      v.src = m.mp4;
+      v.muted = true; v.loop = true; v.autoplay = true;
+      v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+      v.preload = 'auto';
+      v.addEventListener('playing', function () {
+        if (thumbMediaIdx === idx && thumbLink) thumbLink.classList.add('playing');
+      });
+      thumbMedia.appendChild(v);
+      var pr = v.play();
+      if (pr && pr.catch) pr.catch(function () {});   // si el navegador lo bloquea, queda la foto
+    } else if (m.vimeo) {
+      var a = m.vimeo.split('/'), id = a[0], h = a[1] ? '&h=' + a[1] : '';
+      var f = document.createElement('iframe');
+      f.src = 'https://player.vimeo.com/video/' + id +
+              '?background=1&autoplay=1&muted=1&loop=1&autopause=0&dnt=1' + h;
+      f.setAttribute('allow', 'autoplay');
+      f.setAttribute('tabindex', '-1');
+      f.addEventListener('load', function () {
+        if (thumbMediaIdx === idx && thumbLink) thumbLink.classList.add('playing');
+      });
+      thumbMedia.className = (m.o === 'h') ? 'h' : 'v';
+      thumbMedia.appendChild(f);
+    }
+  }
   var workRows    = document.querySelectorAll('#project-table .work-row');
 
   // ----- Home-page project assets (only used in interactive mode) -----
@@ -139,6 +184,19 @@
   // Páginas de proyecto pendientes (Sección D). Por ahora '#' → el clic
   // no navega a ninguna parte (no da 404). Reemplazar por las rutas reales
   // cuando existan las páginas: projects/720-web.html, etc.
+  // Preview en movimiento para el holograma. Mismo orden que THUMB_URLS.
+  //   {mp4:'…'}                 → loop local, mudo, se recorta con object-fit
+  //   {vimeo:'ID/HASH', o:'v'}  → player de Vimeo en modo background
+  //   null                      → sin video (proyecto de fotografía): queda la foto
+  var PREVIEW_MEDIA = [
+    null,                                                     // ARIA — fotografía
+    { vimeo: '1223086129/a3fb5b801d', o: 'v' },               // LAD
+    { vimeo: '1223086962/6a0cb77fd2', o: 'h' },               // TAOHH — trailer
+    { mp4: (inProjects ? '../' : '') + 'assets/loops/wakebio-pool.mp4' },
+    { mp4: (inProjects ? '../' : '') + 'assets/loops/opening-wake.mp4' },
+    { mp4: (inProjects ? '../' : '') + 'assets/loops/sastra-ecosystem.mp4' }
+  ];
+
   var PROJECT_URLS = [
     'proyectos/aria.html', 'proyectos/lad.html', 'proyectos/taohh.html',
     'proyectos/wakebio-pool.html', 'proyectos/opening-wake.html', 'proyectos/sastra-ecosystem.html'
@@ -739,6 +797,7 @@
       transitionElapsed = 0;
       previewReady = false;
       if (thumbWrap) thumbWrap.classList.remove('visible');
+      clearThumbMedia();
     }
 
     // Gate that goes false at the start of every transition and only
@@ -1031,6 +1090,7 @@
           if (currentState > 0) {
             var idx = currentState - 1;
             if (thumbLink) thumbLink.href = PROJECT_URLS[idx];
+            setThumbMedia(idx);
             if (thumbImg) {
               thumbImg.src = THUMB_URLS[idx];
               // Wait for the new image to actually be decoded and
@@ -1062,6 +1122,7 @@
             }
           } else {
             if (thumbWrap) thumbWrap.classList.remove('visible');
+            clearThumbMedia();
             previewReady = true;
           }
         }
